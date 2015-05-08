@@ -74,58 +74,79 @@ describe("inheritance", function () {
         });
     });
 
-    function SmartCar () {
-        Car.call(this);
-    }
+    describe("objects inheriting from a base constructor", function() {
+        describe("inheriting with new operator (deprecated)", function () {
+            describe("when not calling the base constructor", function () {
+                function Mini () {}
+                Mini.prototype = new Car();
 
-    function Trike () {
-        Car.call(this);
-    }
+                it("has prototype methods of the base object", function() {
+                    var mini = new Mini();
+                    expect(mini.drive()).toBe('driving a car');
+                });
 
-    // Ferrari.prototype = new Car(); //deprecated
-    // Ferrari.prototype.constructor = Ferrari;
+                it("has constructor methods of the base object", function() {
+                    var mini = new Mini();
+                    expect(mini.steer()).toBe('steering a car');
+                });
+            });
 
-    SmartCar.prototype = Object.create(Car.prototype);
-
-    describe("inheriting with new operator (deprecated)", function() {
-        function Mini () {}
-        Mini.prototype = new Car();
-
-        it("methods defined on prototype are available to subclass", function() {
-            var mini = new Mini();
-
-            // mini.drive() refers to a prototype method
-            expect(mini.drive()).toBe('driving a car');
         });
-        it("methods defined in constructor function are available to subclass", function() {
-            var mini = new Mini();
-            expect(mini.steer()).toBe('steering a car');
+
+        describe("inheriting with Object.create", function () {
+            describe("when not calling the base constructor", function () {
+                function Tesla() {}
+                Tesla.prototype = Object.create(Car.prototype);
+
+                it("has prototype methods of the base object", function() {
+                    var tesla = new Tesla();
+                    expect(tesla.drive()).toBe('driving a car');
+                });
+
+                it("does not have constructor methods of the base object", function() {
+                    var tesla = new Tesla();
+                    expect(tesla.steer).toBeUndefined();
+                });
+            });
+
+            describe("when calling the base constructor", function () {
+                function SmartCar() {
+                    Car.call(this);
+                }
+                SmartCar.prototype = Object.create(Car.prototype);
+
+                it("has prototype methods of the base object", function () {
+                    var smartCar = new SmartCar();
+                    expect(smartCar.drive()).toBe('driving a car');
+                });
+
+                it("has prototype methods of the base object", function() {
+                    var smartCar = new SmartCar();
+                    expect(smartCar.steer()).toBe('steering a car');
+                });
+            });
         });
     });
 
-    describe("inheriting with Object.create", function () {
+    describe("not attaching anything to the derived object's prototype", function() {
+        describe("calling the base constructor", function () {
+            function Taxi () {
+                Car.call(this);
+            }
 
-        describe("without calling the superclass constructor", function() {
-            it("methods defined on prototype are available to subclass", function() {
-                var ferrari = new Ferrari();
-                expect(ferrari.drive()).toBe('driving a car');
-            });
-            it("methods defined in constructor function are not available to subclass", function() {
-                var ferrari = new Ferrari();
-                expect(ferrari.steer).toBeUndefined();
-            });
-        });
+            it("prototype methods of the base object are not accessible to derived objects", function() {
+                var taxi = new Taxi();
 
-        describe("calling the superclass constructor", function() {
-            it("methods defined on prototype are available to subclass", function() {
-                var smartCar = new SmartCar();
-                expect(smartCar.drive()).toBe('driving a car');
+                // drive() refers to a prototype method
+                expect(taxi.drive).toBeUndefined();
             });
-            it("methods defined in constructor function are available to subclass", function() {
-                var smartCar = new SmartCar();
-                expect(smartCar.steer()).toBe('steering a car');
+
+            it("constructor methods of the base object are accessible to derived objects", function() {
+                var taxi = new Taxi();
+                expect(taxi.steer()).toBe('steering a car');
             });
         });
     });
+
 
 });
