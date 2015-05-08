@@ -3,10 +3,14 @@
 
     function Cat() {
         this.age = 5;
-        var name = "Pivo";
+        var name = 'Pivo';
 
         this.talk = function () {
             return "miiiaow";
+        };
+
+        this.getName = function () {
+            return name;
         };
     }
 
@@ -63,15 +67,17 @@
         });
 
         describe("variables defined in the constructor", function () {
-            it("when using this, they are accessible on instantiated objects ", function () {
+            it("when set using this, they are accessible on instantiated objects ", function () {
                 var cat = new Cat();
                 expect(cat.age).toBe(5);
             });
 
-            it("when using var, they are not accessible on instantiated objects", function () {
+            it("when set using var, they are not accessible on instantiated objects", function () {
                 var cat = new Cat();
                 expect(cat.name).toBe(undefined);
             });
+
+
         });
 
         describe("methods defined in the constructor", function () {
@@ -130,7 +136,6 @@
         });
 
         describe("methods defined on the prototype", function () {
-
             Cat.prototype.eat = function () {
                 return "munch munch";
             };

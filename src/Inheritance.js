@@ -7,7 +7,6 @@
         };
     }
 
-    Car.prototype.color = 'green';
     Car.prototype.drive = function () {
         return 'driving a car';
     };
@@ -130,11 +129,8 @@
                         var taxi = new Taxi();
                         expect(taxi instanceof Car).toBeFalsy();
                     });
-
                 });
             });
         });
-
     });
-
 }());
