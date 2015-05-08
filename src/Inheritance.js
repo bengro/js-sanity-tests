@@ -25,28 +25,9 @@
 
         describe("basics", function () {
             var ferrari = new Ferrari();
-            it("derived object's constructor methods are accessible", function () {
-                expect(ferrari.breakdown()).toBe('breaking down');
-            });
-
-            it("derived object inherits methods from base object's prototype", function () {
-                expect(ferrari.drive()).toBe('driving a car');
-            });
-
-            it("derived object is an instance of its constructor function", function () {
-                expect(ferrari instanceof Ferrari).toBeTruthy();
-            });
 
             //TODO add a test of constructor property
             //TODO how could we change the Car property via the redFerrari obj? -> using constructor property
-
-            it("derived object is also an instance of base constructor function", function () {
-                expect(ferrari instanceof Car).toBeTruthy();
-            });
-
-            it("derived object is also an instance of Object", function () {
-                expect(ferrari instanceof Object).toBeTruthy();
-            });
 
             it("base object follows changes of its prototype", function () {
                 var car = new Car();
@@ -95,6 +76,13 @@
                         var mini = new Mini();
                         expect(mini.steer()).toBe('steering a car');
                     });
+
+                    it("is an instance of the base object", function () {
+                        var mini = new Mini();
+                        expect(mini instanceof Mini).toBeTruthy();
+                        expect(mini instanceof Car).toBeTruthy();
+                        expect(mini instanceof Object).toBeTruthy();
+                    });
                 });
 
             });
@@ -115,6 +103,11 @@
                         var tesla = new Tesla();
                         expect(tesla.steer).toBeUndefined();
                     });
+
+                    it("is an instance of the base object", function () {
+                        var tesla = new Tesla();
+                        expect(tesla instanceof Car).toBeTruthy();
+                    });
                 });
 
                 describe("when calling the base constructor", function () {
@@ -133,30 +126,37 @@
                         var smartCar = new SmartCar();
                         expect(smartCar.steer()).toBe('steering a car');
                     });
+
+                    it("is an instance of the base object", function () {
+                        var smartCar = new SmartCar();
+                        expect(smartCar instanceof Car).toBeTruthy();
+                    });
+                });
+            });
+
+            describe("inheriting without using new or Object.create", function () {
+                describe("by using call() on the base constructor", function () {
+                    function Taxi() {
+                        Car.call(this);
+                    }
+
+                    it("does not have prototype methods of the base object", function () {
+                        var taxi = new Taxi();
+                        expect(taxi.drive).toBeUndefined();
+                    });
+
+                    it("has constructor methods of the base object", function () {
+                        var taxi = new Taxi();
+                        expect(taxi.steer()).toBe('steering a car');
+                    });
+
+                    it("is not an instance of the base object", function () {
+                        var taxi = new Taxi();
+                        expect(taxi instanceof Car).toBeFalsy();
+                    });
                 });
             });
         });
-
-        describe("not attaching anything to the derived object's prototype", function () {
-            describe("calling the base constructor", function () {
-                function Taxi() {
-                    Car.call(this);
-                }
-
-                it("prototype methods of the base object are not accessible to derived objects", function () {
-                    var taxi = new Taxi();
-
-                    // drive() refers to a prototype method
-                    expect(taxi.drive).toBeUndefined();
-                });
-
-                it("constructor methods of the base object are accessible to derived objects", function () {
-                    var taxi = new Taxi();
-                    expect(taxi.steer()).toBe('steering a car');
-                });
-            });
-        });
-
 
     });
 

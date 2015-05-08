@@ -39,6 +39,11 @@
                 expect(newCat.sing()).toBe("la la la");
                 expect(createCat.sing()).toBe("la la la");
             });
+
+            it("instantiated objects are instances of the constructor using either object creation method", function () {
+                expect(newCat instanceof Cat).toBeTruthy();
+                expect(createCat instanceof Cat).toBeTruthy();
+            });
         });
 
         describe("the new operator", function () {
